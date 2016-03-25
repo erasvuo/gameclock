@@ -1,0 +1,79 @@
+<div class="bkground">
+ <div class="tmp"> 
+    <div class="container" ng-controller="SetupController">
+		<div class="row">
+			<div class="col-xs-12 col-sm-12">
+				<h3>Game Controller Setup</h3> 
+			</div>
+			<div class="col-xs-12 col-sm-12">
+				<form class="forml" role="form" name="setupForm" ng-submit="saveSettings()" novalidate>
+                    <div class="form-group form-inline" role="form">                     
+						<div>
+							<label for="kotijoukkue" class="control-label">Home Team:</label>  
+							<input type="text" class="form-control" id="kotijoukkue" name="kotijoukkue" placeholder="Home Team" ng-model="setup[0].hometeam">
+                        </div>
+                    </div>
+					
+                    <div class="form-group form-inline" role="form"> 
+                        <div>
+							<label for="vierasjoukkue" class="control-label">Visitor Team:</label>
+							<input type="text" class="form-control" id="vierasjoukkue" name="vierasjoukkue" placeholder="Visitor Team" ng-model="setup[0].visitorteam">
+                        </div>
+                    </div>                    
+    
+                    <div class="form-group form-inline" role="form">
+						<label for="ajanlasku" class="control-label">Time direction:</label>  
+						<div class="radio">
+							<label><input type="radio" name="optradio" ng-model="setup[0].countdown" ng-value="false">Count up</label>
+						</div>
+						<div class="radio">
+							<label><input type="radio" name="optradio" ng-model="setup[0].countdown" ng-value="true">Count down</label>
+						</div>
+					</div>
+  
+  
+					<div class="form-group form-inline" role="form">
+						<label for="sel1" class="control-label">Length of period:</label>
+						<select class="form-control" id="sel1" ng-change="gameTimeChanged($index)" ng-model="setup[0].gametimes[$index]"
+								ng-options="gametime.id as gametime.minutes for gametime in setup[0].gametimes">
+						</select>
+
+						<label for="sel2">Amount of periods:</label>
+						<select class="form-control" id="sel2" ng-change="periodCountChanged($index)" ng-model="setup[0].periodcounts[$index]" 
+								ng-options="periodcount.id as periodcount.text for periodcount in setup[0].periodcounts"></select>
+
+
+						<label for="sel3">Break time:</label>
+						<select class="form-control" id="sel3" ng-change="pauseTimeChanged($index)" ng-model="setup[0].pausetimes[$index]" 
+								ng-options="pausetime.id as pausetime.text for pausetime in setup[0].pausetimes"></select>
+
+					</div>
+					<div class="form-group form-inline" role="form">
+						<label for="sel4">Length of timeout:</label>
+						<select class="form-control" id="sel4" ng-change="timeoutTimeChanged($index)" ng-model="setup[0].timeouttimes[$index]" 
+								ng-options="timeouttime.id as timeouttime.text for timeouttime in setup[0].timeouttimes"></select>
+					</div>
+
+        			<div class="form-group form-inline">
+						<label for="rangaistukset" class="control-label">Used penalty times:</label>
+        				<div class="form-group form-horizontal" role="form" ng-repeat="item in setup[0].penalties">
+							<div class="checkbox">
+								<label>
+								<input type="checkbox" ng-checked="{{setup[0].penalties[$index].value}}" ng-true-value="true" ng-false-value="false" ng-model="setup[0].penalties[$index].value">{{item.text}}
+								</label>
+							</div>
+        				</div>
+					</div>
+
+                    <div class="form-group">
+                        <div>
+							<button type="submit" class="btn btn-primary btn-responsive" ng-disabled="setupForm.$invalid" ui-sref="app.control">Save Setup</button>                            
+                        </div>
+                    </div>																		
+				</form>
+            </div>
+		</div>
+		<p style="padding: 114px;">
+    </div>
+</div>
+</div>    
