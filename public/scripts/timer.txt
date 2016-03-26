@@ -1,0 +1,243 @@
+
+.controller('TimerController', ['$scope', function($scope) {
+
+
+var defGameMinutes = 10;
+var defGameSeconds = 0;
+
+var gMinutes = 10;
+var gSeconds = 10;
+
+var remainingTime;
+var calcDown = true;
+var countdownHandle;
+
+//var audio = new Audio('myaudio.mp3');
+
+
+            $scope.playSound = function() {
+
+                var beep = new Audio();
+                beep.src = "./sounds/myaudio.mp3";
+                beep.play();
+            };
+
+
+
+
+$(document).ready(function() {
+  setGameTimer(defGameMinutes, defGameSeconds);
+});
+
+
+function setCalcDirection(calcDirection){
+  calcDown = calcDirection;
+}
+
+
+
+            $scope.setGameTimer = function() {
+                stopTimer();
+                gMinutes = gameMinutes;
+                gSeconds = gameSeconds;
+                resetTimer();
+            };
+/*
+function setGameTimer(gameMinutes, gameSeconds){
+  stopTimer();
+  gMinutes = gameMinutes;
+  gSeconds = gameSeconds;
+  resetTimer();
+}
+*/
+
+function setShortTimer(shortPauseMinutes, shortPauseSeconds){
+  stopTimer();
+  gMinutes = shortPauseMinutes;
+  gSeconds = shortPauseSeconds;
+  resetTimer();
+}
+
+
+function setLongTimer(longPauseMinutes, longPauseSeconds){
+  stopTimer();
+  gMinutes = longPauseMinutes;
+  gSeconds = longPauseSeconds;
+  resetTimer();
+}
+
+
+
+            $scope.onStartTimer = function() {
+                stopTimer();
+                startTimer();
+            };
+/*
+function onStartTimer(){
+  stopTimer();
+  startTimer();
+};
+*/
+
+
+            $scope.onStopTimer = function() {
+                stopTimer();
+            };
+/*
+function onStopTimer(){
+  stopTimer();
+
+};
+*/
+
+            $scope.onResetTimer = function() {
+                stopTimer();
+                resetTimer();
+            };
+/*
+function onResetTimer(){
+  stopTimer();
+  resetTimer();
+}
+*/
+
+            $scope.startAlarm = function() {
+                if(remainingTime<1000) {
+                    //audio.play();
+                    playSound();
+                }
+            };
+/*            
+function startAlarm(){
+  if(remainingTime<1000) {
+    audio.play();
+  }
+}
+*/
+
+            $scope.startTimer = function() {
+                countdownHandle=setInterval(function() {
+                decrementTimer();
+                },1000);
+            };
+/*
+function startTimer() {
+  countdownHandle=setInterval(function() {
+    decrementTimer();
+  },1000);
+}
+*/
+
+            $scope.stopTimer = function() {
+                clearInterval(countdownHandle);
+                startAlarm();
+            };
+/*
+function stopTimer() {
+  clearInterval(countdownHandle);
+  startAlarm();
+}
+*/
+
+
+            $scope.resetTimer = function() {
+                remainingTime = (gMinutes*60*1000)+(gSeconds*1000);
+                renderTimer();
+            };
+/*            
+function resetTimer(){
+
+  remainingTime = (gMinutes*60*1000)+(gSeconds*1000);
+  renderTimer();
+}
+*/
+
+            $scope.renderTimer = function() {
+
+                var deltaTime;
+
+                if(calcDown) {
+                    deltaTime=remainingTime;
+                }
+                else {
+                    deltaTime=(gMinutes*60*1000)+(gSeconds*1000) - remainingTime;    
+                }
+                var minutesValue=Math.floor(deltaTime/(1000*60));
+                deltaTime=deltaTime%(1000*60);
+
+                var secondsValue=Math.floor(deltaTime/(1000));
+
+                showTime(minutesValue, secondsValue);
+            };
+/*
+function renderTimer(){
+
+  var deltaTime;
+
+  if(calcDown)
+    deltaTime=remainingTime;
+  else
+    deltaTime=(gMinutes*60*1000)+(gSeconds*1000) - remainingTime;    
+
+
+  var minutesValue=Math.floor(deltaTime/(1000*60));
+  deltaTime=deltaTime%(1000*60);
+
+  var secondsValue=Math.floor(deltaTime/(1000));
+
+  showTime(minutesValue, secondsValue);
+};
+*/
+
+            $scope.showTime = function(remainingMinutes, remainingSeconds) {
+
+                var minutesString = formatTime(remainingMinutes);
+                var secondsString = formatTime(remainingSeconds);
+
+                $('#minutesNext').text(minutesString);
+                $('#secondsNext').text(secondsString);
+            };
+/*
+function showTime(remainingMinutes, remainingSeconds) {
+
+  var minutesString = formatTime(remainingMinutes);
+  var secondsString = formatTime(remainingSeconds);
+
+  $('#minutesNext').text(minutesString);
+  $('#secondsNext').text(secondsString);
+}
+*/
+
+            $scope.formatTime = function(intergerValue) {
+                return intergerValue > 9 ? intergerValue.toString():'0'+intergerValue.toString();
+            };
+/*            
+function formatTime(intergerValue){
+
+  return intergerValue > 9 ? intergerValue.toString():'0'+intergerValue.toString();
+}
+*/
+
+            $scope.decrementTimer = function() {
+                remainingTime-=(1*1000);
+
+                if(remainingTime<1000){
+                    onStopTimer();
+                }
+                renderTimer();
+            };
+
+
+/*
+function decrementTimer(){
+
+  remainingTime-=(1*1000);
+
+  if(remainingTime<1000){
+    onStopTimer();
+  }
+  renderTimer();
+}
+*/
+
+}]);

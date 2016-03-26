@@ -1,0 +1,250 @@
+<div class="bkground">
+ <div class="tmp">    
+<div class="container" ng-controller="SetupController">
+    <div class="container" ng-controller="CtrlController">
+		<div class="row row-content">
+			<h3><center>Hall Display</center></h3>
+    		<div class="panel panel-default panel-body">
+				<div class="row">
+					<div class="col-xs-12 col-sm-12">
+						
+						<div class="col-xs-3 col-sm-3">
+							<table class="table">
+  								<tr ng-repeat="item in homePenalties">
+    								<td class="td3 col-xs-6 col-sm-6" id="homepenalty">No:{{item.player}}<br>{{item.length}}
+                                        <!--span id="homepenalty">No:{{item.player}}</span><span>:</span><span id="homepenaltytime">{{item.length}}</span-->
+                                    </td>
+  								</tr>
+							</table>
+						</div>
+
+						<div class="col-xs-6 col-sm-6">
+							<table class="table">
+  								<tr>
+									<td class="td1" id="homegoalsonscreen">00</td>
+									<td class="td6" id="period">1</td>
+									<td class="td1" id="visitorgoalsonscreen">00</td>
+								</tr>
+  								<tr>
+									<td class="td4">H</td>
+									<td class="td1" id="breakperiod"></td>
+									<td class="td5">V</td>
+  								</tr>
+  								<tr>
+									<td class="td2" id="hometimeout">							
+                                        <div ng-repeat="item in homeTimeouts track by $index">
+                                            o
+                                        </div>
+
+									</td>								
+            						<td class="td1" id="nextTime">
+              							<span id="minutesNext">00</span><span>:</span><span id="secondsNext">00</span>
+            						</td>
+									<td class="td3" id="visitortimeout">
+                                        <div ng-repeat="item in visitorTimeouts track by $index">
+                                            o
+                                        </div>
+									</td>
+  								</tr>  				  				
+							</table>
+						</div>
+
+						<div class="col-xs-3 col-sm-3 pull-right">					
+							<table class="table">
+  								<tr ng-repeat="item in visitorPenalties">
+	    							<td class="td2 col-xs-6 col-sm-6">No:{{item.id}}<br>{{item.value}}</td>
+  								</tr>
+							</table>
+						</div>					
+					</div>
+				</div><!--Row-->
+    		</div><!--Panel-->
+		</div>  <!--Row content-->  					
+
+    <div class="panel1 panel-default">
+      	<div class="panel-body text-center">
+			<h3>Game Controller</h3> 
+
+			<div class="col-xs-12 col-sm-12">
+				<form class="form-group form-inline" role="form">
+					<div class="form-group form-inline col-xs-12 col-sm-12">
+						<div class="col-xs-2 col-sm-2">
+							<button type="button" class="btn btn-default" id="homegoals" ng-model="clockTicking" 
+                                    ng-click="RemHomeGoal()" ng-disabled="isBtnDisabled()">-</button>						
+						</div>
+						<div class="col-xs-2 col-sm-2">
+							<button type="button" class="btn btn-default col-xs-2 col-sm-2" id="visitorgoals" ng-model="clockTicking"
+                            ng-click="RemVisitorGoal()" ng-disabled="isBtnDisabled()">-</button>
+						</div>
+						<div class="col-xs-2 col-sm-2">
+                            <button type="button" class="btn btn-default col-xs-2 col-sm-2" ng-model="clockTicking" 
+                                    id="timeouts" ng-click="setHomeTimeout()" ng-disabled="(isBtnDisabled() || isTimeoutOngoing())">
+                                Home<br>Timeout
+                            </button>				
+						</div>
+						<div class="col-xs-2 col-sm-2">
+                            <button type="button" class="btn btn-default col-xs-2 col-sm-2" ng-model="clockTicking" 
+                                    id="timeouts" ng-click="setVisitorTimeout()" ng-disabled="(isBtnDisabled() || isTimeoutOngoing())">
+                                Visitor<br>Timeout
+                            </button>
+						</div>
+						<div class="col-xs-2 col-sm-2">
+          					<button type="button" id="stopBtn" class="btn btn-danger" ng-click="onStopTimer()">
+            					<span class="glyphicon glyphicon-stop" aria-hidden="true"></span> Stop
+          					</button>
+
+						</div>
+						<div class="col-xs-2 col-sm-2">
+          					<button type="button" id="startBtn" class="btn btn-primary" ng-model="timeoutOngoing" 
+                                    ng-click="onStartTimer()" ng-disabled="isTimeoutOngoing()">
+            					<span class="glyphicon glyphicon-play" aria-hidden="true"></span> Start
+          					</button>
+						</div>						
+					</div>
+				</form>			
+				<form class="form-group form-inline" role="form">
+					<div class="col-xs-12 col-sm-12">
+						<div class="col-xs-2 col-sm-2 col-xs-offset-1 col-sm-offset-1">
+							<button type="button" class="btn btn-default" id="goaltoscreenBtn" ng-model="clockTicking"
+                                    ng-click="UpdateGoalsToScreen()" ng-disabled="isBtnDisabled()">Set</button>
+						</div>
+
+						<div class="container col-xs-2 col-sm-2 col-xs-offset-2 col-sm-offset-2" ng-controller="AddPenaltyModalCtrl">
+    						<script type="text/ng-template" id="addpenaltymodal.html">
+        						<div class="modal-header">
+            						<h3 class="modal-title">Add Penalty</h3>
+        						</div>
+        						
+        						<div class="modal-body">
+
+              						<form class="forml" role="form" name="controlForm">
+                						<form class="form-inline">
+                    						<div class="form-group">
+                        						<label for="player">Player nr:</label>
+                        						<input type="text" class="form-control input-sm" 
+                        	        				id="player" ng-model="penalty.player" placeholder="Number of Player">
+
+						                        <div class="radio">
+                            						<label><input type="radio" ng-model="penalty.home" ng-value="true" ng-checked="penalty.home">Home</label>
+                        						</div>
+                        						<div class="radio">
+                            						<label><input type="radio" ng-model="penalty.home" ng-value="false" ng-checked="!penalty.home">Visitor</label>
+                        						</div>
+                    						</div>
+                    						<div class="form-group">
+                        						<label for="reason">Reason for Penalty:</label>
+                        						<select class="form-control" id="reason" ng-change="reasonChanged()" ng-model="penalty.reason" 
+                                					ng-options="reason.id as reason.value for reason in reasons"></select>
+                    						</div>
+                    						<div class="form-group">
+                        						<label for="penalty" class="control-label">Length of Penalty:</label>
+                        						<select class="form-control" id="penalty" ng-change="penaltyTimeChanged()" ng-model="penalty.length" 
+                                					ng-options="length.id as length.value for length in lengths"></select>              
+                    						</div>  
+                						</form>
+              						</form>
+        						</div>
+        						<div class="modal-footer">
+            						<button class="btn btn-primary" type="button" ng-click="ok()">Confirm</button>
+            						<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        						</div>
+    						</script>
+    						<button type="button" id="addPenaltyBtn" class="btn btn-default col-xs-2 col-sm-2" ng-model="clockTicking"
+                                    ng-click="open()" ng-disabled="isBtnDisabled()">Add<br>Penalty</button>
+                        </div>
+
+						<div class="col-xs-2 col-sm-2 col-xs-offset-2 col-sm-offset-2">
+							<button type="button" class="btn btn-default" id="goaltoscreenBtn" ng-click="playAlarm()">
+								<span class="glyphicon glyphicon-volume-up red"></span>
+							</button>							
+						</div>
+					</div>
+				</form>	
+				<form class="form-group form-inline" role="form">
+					<div class="col-xs-12 col-sm-12">
+						<div class="col-xs-2 col-sm-2">
+							<button type="button" class="btn btn-default" id="homegoals" ng-model="clockTicking" 
+                                    ng-click="AddHomeGoal()" ng-disabled="isBtnDisabled()">+</button>
+						</div>
+						<div class="col-xs-2 col-sm-2">
+							<button type="button" class="btn btn-default" id="visitorgoals" ng-model="clockTicking" 
+                                    ng-click="AddVisitorGoal()" ng-disabled="isBtnDisabled()">+</button>
+						</div>
+
+						<div class="container col-xs-2 col-sm-2 col-xs-offset-1 col-sm-offset-1" ng-controller="RemovePenaltyModalCtrl">
+    						<script type="text/ng-template" id="removepenaltymodal.html">
+        						<div class="modal-header">
+            						<h3 class="modal-title">Remove Penalty</h3>
+        						</div>
+        						<div class="modal-body">
+            						<form class="forml" role="form" name="controlForm">            						
+                						<form class="form-inline">
+                    						<div class="form-group">
+                        						<label for="player">Player nr:</label>
+                        						<input type="text" class="form-control input-sm" 
+                                					id="player" ng-model="penalty.player" placeholder="Number of Player">                                					
+                        						<div class="radio">
+                            						<label><input type="radio" ng-model="penalty.home" ng-value="true" ng-checked="penalty.home">Home</label>
+                        						</div>
+                        						<div class="radio">
+                            						<label><input type="radio" ng-model="penalty.home" ng-value="false" ng-checked="!penalty.home">Visitor</label>
+                            					</div>	
+                        					</div>
+                						</form>
+            						</form>
+        						</div>
+        						<div class="modal-footer">
+            						<button class="btn btn-primary" type="button" ng-click="ok()">Confirm</button>
+            						<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        						</div>
+    						</script>
+    						<button type="button" id="removePenaltyBtn" class="btn btn-default col-xs-2 col-sm-2" ng-model="clockTicking"
+                                    ng-click="open()" ng-disabled="isBtnDisabled()">Remove<br>Penalty</button>
+						</div>
+
+						<div class="col-xs-2 col-sm-2 col-xs-offset-1 col-sm-offset-1">
+          					<button id="resetBtn" class="btn btn-warning btn-responsive" type="submit" ng-model="clockTicking" 
+                                    ng-click="onResetTimer()" ng-disabled="isBtnDisabled()"> 
+            					<span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span> Reset
+          					</button>
+          				</div>
+
+						<div class="container col-xs-2 col-sm-2" ng-controller="SetNewTimeModalCtrl">                     
+                            <script type="text/ng-template" id="setnewtimemodal.html">
+                                <div class="modal-header">
+                                    <h3 class="modal-title">Set New Gametime</h3>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="forml" role="form" name="controlForm">
+                                        <form class="form-inline">
+                                        <div class="form-group">
+                                            <label for="minutes">Minutes:</label>
+                                            <input type="text" class="form-control input-sm" 
+                                                id="player" ng-model="newgametime.minutes" placeholder="Give Game Minutes">
+
+                                            <label for="seconds">Seconds:</label>
+                                            <input type="text" class="form-control input-sm" 
+                                                id="player" ng-model="newgametime.seconds" placeholder="Give Game Seconds">
+                                        </div>
+                                        </form>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-primary" type="button" ng-click="ok()">Confirm</button>
+                                    <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+                                </div>
+                            </script>
+                            <button type="button" class="btn btn-warning" id="resetBtn" ng-model="clockTicking" 
+                                    ng-click="open()" ng-disabled="isBtnDisabled()">Set<br>New Time</button> 
+                        </div>								
+					</div>
+				</form>	
+			</div>
+		</div>
+	</div> <!--Panel-->
+    </div><!--container CtrlController-->
+	
+	<p style="padding: 5px;">
+</div><!--container SetupController-->
+</div>
+</div>
